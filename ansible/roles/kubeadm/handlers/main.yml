@@ -1,0 +1,7 @@
+---
+# handlers file for kubeadm
+- name: restart_kubelet_daemon
+  service:
+    name: kubelet
+    state: restarted
+  become: true

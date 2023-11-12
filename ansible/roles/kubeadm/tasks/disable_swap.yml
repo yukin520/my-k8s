@@ -1,0 +1,27 @@
+
+- name: Get current swap state.
+  shell: swapon -v
+  register: swap_state
+  check_mode: false
+  changed_when: false
+
+- name: Disable swap if swap state is enable.
+  shell: swapoff -a
+  when: swap_state.stdout != ''
+  become: true
+
+- name: Get swap mode by /etc/fstab
+  shell: grep -v "\s*#" /etc/fstab | awk '{print $3}' | grep swap -c
+  register: swap_state_in_fstab
+  check_mode: false
+  changed_when: false
+  ignore_errors: true
+  become: true
+
+- name: Disable swap permanently.
+  replace:
+    path: /etc/fstab
+    regexp: ([^\s]+\s+swap\s+.*)
+    replace: '# \1'
+  when: swap_state_in_fstab.stdout != '0'
+  become: true

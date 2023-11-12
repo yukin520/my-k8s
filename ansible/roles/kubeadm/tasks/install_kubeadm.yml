@@ -1,0 +1,65 @@
+---
+# NOTE: Refer to kubernetes docs. (https://kubernetes.io/ja/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
+- name: Upadte exist pacakges.
+  ansible.builtin.apt:
+    update_cache: yes
+  become: true
+
+
+- name: Install pacakges to configure kubeadm. 
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present 
+  become: true
+  with_items: 
+      - ca-certificates
+      - curl
+      - apt-transport-https
+
+# /etc/apt/trusted.gpg.dに鍵を置くのは非推奨となったため、
+# apt_keyモジュールの代わりにget_urlモジュールを利用して
+# etc/apt/keyrings/にリポジトリの公開鍵を配置することとする
+- name: Directory /etc/apt/keyrings is exist.
+  file:
+    path: "/etc/apt/keyrings"
+    state: directory
+    owner: "root"
+    group: "root"
+    mode: "0755"
+
+- name: Get the public key of Google cloud kubernetes repository to the node.
+  get_url:
+    url: "https://dl.k8s.io/apt/doc/apt-key.gpg"
+    dest: /etc/apt/keyrings/kubernetes-archive-keyring.gpg
+    mode: '0644'
+    force: true
+  become: true
+
+- name: Add the kubernetes repository to the apt source.
+  ansible.builtin.apt_repository:
+    repo: deb [ arch={{ deb_architecture[ansible_architecture] }} signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+  become: true
+
+- name: Upadte exist pacakges after enable docker repository.
+  ansible.builtin.apt:
+    update_cache: yes
+  become: true
+
+- name: Install kubelet. 
+  apt:
+    name: kubelet
+    state: present
+  notify: 
+    - restart_kubelet_daemon
+  # changed_when: true
+  become: true
+
+- name: Install kubernetes tools. 
+  apt:
+    name: "{{ item }}"
+    state: present
+  become: true
+  with_items: 
+    - kubeadm
+    - kubectl
