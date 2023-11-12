@@ -10,7 +10,7 @@
 - name: Init kubeadm.
   shell: "kubeadm init"
   become: true
-  # 'kubeadm token list'のステータスコードが0 ＝ Kuberntesクラスタが構成されていない
+  # 'kubeadm token list'のステータスコードが1 ＝ Kuberntesクラスタが構成されていない
   when: _kubernetes_cluster_bootstrap_status.rc == 1
 
 - name: Create directory for kueconfig.
