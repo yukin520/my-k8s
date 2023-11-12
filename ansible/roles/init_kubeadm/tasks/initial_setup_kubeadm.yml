@@ -1,0 +1,37 @@
+
+- name: Get status kubeadm cluster.
+  shell: "kubeadm token list"
+  register: _kubernetes_cluster_bootstrap_status
+  check_mode: false
+  changed_when: false
+  ignore_errors: true
+  become: true
+
+- name: Init kubeadm.
+  shell: "kubeadm init"
+  become: true
+  # 'kubeadm token list'のステータスコードが0 ＝ Kuberntesクラスタが構成されていない
+  when: _kubernetes_cluster_bootstrap_status.rc == 1
+
+- name: Create directory for kueconfig.
+  file:
+    path: "/home/{{ ansible_user }}/.kube"
+    state: directory
+    owner: "{{ ansible_user }}"
+
+- name: Copy kubeconfig for initialize node.
+  ansible.builtin.copy:
+    src: "/etc/kubernetes/admin.conf"
+    dest: "/home/{{ ansible_user }}/.kube/config"
+    remote_src: true
+    owner: "{{ ansible_user }}"
+    mode: "0644"
+  become: true
+
+- name: Generate join command
+  command: kubeadm token create --print-join-command
+  register: kubeadm_join_command
+
+- name: Show join command. 
+  debug: 
+    var: kubeadm_join_command

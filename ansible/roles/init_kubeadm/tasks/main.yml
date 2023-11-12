@@ -1,0 +1,7 @@
+---
+# tasks file for init_kubeadm
+
+- include_tasks: roles/init_kubeadm/tasks/initial_setup_kubeadm.yml
+  when:
+    - is_controle_plane == true
+    - is_initial_setup_kubeadm == true

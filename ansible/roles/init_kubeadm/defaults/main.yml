@@ -1,0 +1,10 @@
+---
+# defaults file for init_kubeadm
+is_controle_plane: false
+
+kubernetes_clster_token: ""
+kubernetes_clster_ca_cert_hash: ""
+kubernetes_clster_join_command: ""
+
+# For controle plane variables.
+is_initial_setup_kubeadm: false
