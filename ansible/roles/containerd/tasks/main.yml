@@ -1,0 +1,6 @@
+---
+# tasks file for containerd
+- include_tasks: roles/containerd/tasks/initial_configuration.yml
+# - include_tasks: roles/containerd/tasks/edit_iptables.yml
+- include_tasks: roles/containerd/tasks/install_containerd.yml
+- include_tasks: roles/containerd/tasks/set_cgroup_driver.yml

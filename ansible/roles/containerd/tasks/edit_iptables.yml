@@ -1,0 +1,20 @@
+
+# TODO: ip-tablesのルール適用をAnsibleの標準モジュールを利用して実装できないか検討する
+
+- name: Copy iptables rule file to node.
+  ansible.builtin.copy:
+    src: roles/containerd/files/iptables_rules.v4
+    dest: "{{ iptables_rule_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+
+
+- name: Restore iptables state from a rule file.
+  community.general.iptables_state:
+    state: restored
+    path: "{{ iptables_rule_file }}"
+  async: "{{ ansible_timeout }}"
+  poll: 0
+  become: true

@@ -1,0 +1,43 @@
+
+- name: "The file of kernel module config is exist at {{ kernel_module_dir }}."
+  ansible.builtin.copy:
+    src: roles/containerd/files/k8s.conf
+    dest: "{{ kernel_module_dir }}/k8s.conf"
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+
+- name: Add kernel module to configure overlay network.
+  community.general.modprobe:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - overlay
+    - br_netfilter
+  become: true
+
+- name: "Create {{ sysctl_conf_directory }}/k8s.conf if not exists." 
+  ansible.builtin.file:
+    path: "{{ sysctl_conf_directory }}/k8s.conf"
+    state: touch
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+
+- name: Edit Kernel parameter to configure overlay network.
+  ansible.posix.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    sysctl_file: "{{ sysctl_conf_directory }}/k8s.conf"
+  with_items: 
+    - name: net.bridge.bridge-nf-call-iptables
+      value: "1"
+    - name: net.bridge.bridge-nf-call-ip6tables
+      value: "1"
+    - name: net.ipv4.ip_forward
+      value: "1"
+  become: true
+  

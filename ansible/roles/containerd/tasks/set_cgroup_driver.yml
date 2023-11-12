@@ -1,0 +1,14 @@
+
+- name: Get current cgroup version.
+  shell: "stat -fc %T /sys/fs/cgroup/"
+  register: current_cgroup_version
+
+- name: Enable cgroup driver for containerd if current cgroup is v2.
+  ansible.builtin.lineinfile:
+    path: /etc/selinux/config
+    regexp: '^SystemdCgroup \= false'
+    line: SystemdCgroup \= true
+  become: true
+  when: current_cgroup_version == "cgroup2fs" # cgroup v2の場合
+  notify: 
+    - restart_conrtainerd_daemon

@@ -1,0 +1,65 @@
+---
+- name: Upadte exist pacakges.
+  ansible.builtin.apt:
+    update_cache: yes
+  become: true
+
+# NOTE: Refer to docekr docs. (https://docs.docker.com/engine/install/ubuntu/)
+- name: Docker-related packages is not exist.
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: absent 
+  become: true
+  with_items: 
+      - docker.io
+      - docker-doc docker-compose
+      - podman-docker
+      - containerd
+      - runc
+
+- name: Install pacakges to configure containerd. 
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present 
+  become: true
+  with_items: 
+      - ca-certificates
+      - curl
+      - gnupg
+
+- name: Directory /etc/apt/keyrings is exist.
+  file:
+    path: "/etc/apt/keyrings"
+    state: directory
+    owner: "root"
+    group: "root"
+    mode: "0755"
+
+- name: Add the GPG key from the Docker repository to the node.
+  get_url:
+    url: "https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg"
+    dest: /etc/apt/keyrings/docker.asc
+    mode: '0644'
+    force: true
+  become: true
+
+- name: Add the Docker repository to the apt source.
+  ansible.builtin.apt_repository:
+    repo: "deb [arch={{ deb_architecture[ansible_architecture] }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable"
+    state: present
+  become: true
+
+- name: Upadte exist pacakges after enable docker repository.
+  ansible.builtin.apt:
+    update_cache: yes
+  become: true
+
+- name: Install containerd. 
+  apt:
+    name: containerd
+    state: present
+  notify: 
+    - restart_conrtainerd_daemon
+  # changed_when: true
+  become: true
+
