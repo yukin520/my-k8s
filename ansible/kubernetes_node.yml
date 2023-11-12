@@ -1,0 +1,21 @@
+
+- name: Set up nodes for kubernetes.
+  gather_facts: true
+  hosts:
+    kubernetes_node
+  vars:
+    include_vars: group_vars/kubernetes_node.yml
+  roles:
+    - role: containerd
+    - role: kubeadm
+
+
+- name: Init kubeadm for controle plane node.
+  gather_facts: true
+  hosts:
+    controle_plane
+  roles:
+    - role: init_kubeadm
+      vars:
+        is_controle_plane: true
+      when: is_initial_setup_kubeadm == true
