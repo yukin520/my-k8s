@@ -6,6 +6,7 @@
   vars:
     include_vars: group_vars/kubernetes_node.yml
   roles:
+    - role: iptables
     - role: containerd
     - role: kubeadm
 
