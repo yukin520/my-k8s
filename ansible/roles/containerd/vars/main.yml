@@ -3,7 +3,6 @@
 
 kernel_module_dir: /etc/modules-load.d
 sysctl_conf_directory: /etc/sysctl.d
-iptables_rule_file:  /etc/iptables/rules.v4
 
 # https://stackoverflow.com/questions/58169348/how-is-the-architecture-fact-called-in-ansible
 deb_architecture:
