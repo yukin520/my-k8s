@@ -34,4 +34,4 @@
 
 - name: Show join command. 
   debug: 
-    var: kubeadm_join_command
+    var: kubeadm_join_command.stdout
