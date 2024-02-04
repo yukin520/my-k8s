@@ -1,0 +1,4 @@
+---
+# vars file for iptables
+current_date: "{{ lookup('pipe','date +%Y%m%d%H%M') }}"
+iptables_rule_file:  /etc/iptables/rules.v4

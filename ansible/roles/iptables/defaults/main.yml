@@ -1,0 +1,5 @@
+---
+# defaults file for iptables
+
+enable_iptables: true
+src_iptables_rule_file: roles/iptables/files/oci_node_iptables_rules.v4

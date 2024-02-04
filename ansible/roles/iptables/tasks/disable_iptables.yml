@@ -1,0 +1,44 @@
+---
+# Refer to https://webhostinggeeks.com/howto/how-to-disable-iptables-on-ubuntu/
+
+- name: Gather current services.
+  ansible.builtin.service_facts:
+
+- name: Export current iptables state to a rule file.
+  community.general.iptables_state:
+    state: saved
+    path: "/etc/iptables/{{ current_date}}rules.v4"
+  poll: 0
+  become: true
+  when:
+    - "'netfilter-persistent' in ansible_facts.services"
+    - "ansible_facts.services['netfilter-persistent'] == 'running'"
+
+- name: Clear all iprules rules.
+  iptables:
+    flush: true
+  become: true
+
+- name: Set defalut iptables chains.
+  iptables:
+    chain: "{{ item }}"
+    policy: ACCEPT
+  with_items:
+    - "INPUT"
+    - "FORWARD"
+    - "OUTPUT"
+  become: true
+
+- name: Stop service netfilter-persistent, if started.
+  ansible.builtin.service:
+    name: netfilter-persistent
+    state: stopped
+  become: true
+  
+
+- name: Restart networking service.
+  ansible.builtin.service:
+    name: NetworkManager
+    state: restarted
+  become: true
+  

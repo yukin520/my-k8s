@@ -1,0 +1,8 @@
+---
+# tasks file for iptables
+
+- include_tasks: roles/iptables/tasks/disable_iptables.yml
+  when: not enable_iptables
+
+- include_tasks: roles/iptables/tasks/edit_iptables.yml
+  when: enable_iptables
