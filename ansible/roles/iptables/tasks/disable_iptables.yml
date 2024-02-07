@@ -34,11 +34,13 @@
     name: netfilter-persistent
     state: stopped
   become: true
+  when:
+    - "'netfilter-persistent' in ansible_facts.services"
   
 
 - name: Restart networking service.
   ansible.builtin.service:
-    name: NetworkManager
+    name: "{{ networking_service }}"
     state: restarted
   become: true
   
