@@ -7,7 +7,7 @@
   ansible.builtin.lineinfile:
     path: /etc/selinux/config
     regexp: '^SystemdCgroup \= false'
-    line: SystemdCgroup \= true
+    line: SystemdCgroup = true
   become: true
   when: current_cgroup_version == "cgroup2fs" # cgroup v2の場合
   notify: 
