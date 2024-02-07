@@ -12,3 +12,28 @@
   when: current_cgroup_version == "cgroup2fs" # cgroup v2の場合
   notify: 
     - restart_conrtainerd_daemon
+
+- name: Created directory /etc/containerd
+  ansible.builtin.file:
+    path: /etc/containerd
+    state: directory
+    owner: root
+    mode: '755'
+  become: true
+
+
+- name: Generate containerd configuration file(/etc/containerd/config.toml)
+  ansible.builtin.shell: containerd config default | sudo tee /etc/containerd/config.toml
+  become: true
+  
+
+- name: runc use systemcd cgroup driver.
+  ansible.builtin.replace:
+    dest: /etc/containerd/config.toml
+    regexp: 'SystemdCgroup = false'
+    replace: 'SystemdCgroup = true'
+  become: true
+  notify: 
+    - restart_conrtainerd_daemon
+
+
