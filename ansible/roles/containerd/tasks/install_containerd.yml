@@ -34,6 +34,7 @@
     owner: "root"
     group: "root"
     mode: "0755"
+  become: true
 
 - name: Add the GPG key from the Docker repository to the node.
   get_url:
