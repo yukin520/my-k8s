@@ -8,7 +8,7 @@
   become: true
 
 - name: Init kubeadm.
-  shell: "kubeadm init"
+  shell: "kubeadm init --pod-network-cidr={{ pod_network_cidr }} --service-cidr={{ service_cidr }}"
   become: true
   # 'kubeadm token list'のステータスコードが1 ＝ Kuberntesクラスタが構成されていない
   when: _kubernetes_cluster_bootstrap_status.rc == 1
