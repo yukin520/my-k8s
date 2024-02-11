@@ -1,3 +1,13 @@
+# Ansible
 ansible/.venv
 ansible/production/
 ansible/staging/
+
+# Teraform
+terraform/oci/scripts/set_secrets.sh
+terraform/oci/.terraform.lock.hcl
+terraform/oci/terraform.tfstate
+terraform/oci/terraform.tfstate.backup
+terraform/oci/.terraform/
+
+# Other
