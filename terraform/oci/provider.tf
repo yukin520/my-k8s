@@ -8,5 +8,5 @@ terraform {
 }
 
 provider "oci" {
-  region = "ap-osaka-1"
+  region = var.oci_region
 }
