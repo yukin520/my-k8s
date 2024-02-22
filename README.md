@@ -1,2 +1,2 @@
 
-# Kuberntes bootstrap
+# kube-management-suite
