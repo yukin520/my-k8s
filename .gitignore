@@ -10,4 +10,9 @@ terraform/oci/terraform.tfstate
 terraform/oci/terraform.tfstate.backup
 terraform/oci/.terraform/
 
+# Terraform aws
+terraform/aws/scripts/set_secrets.sh
+terraform/aws/.terraform.lock.hcl
+terraform/aws/.terraform/
+
 # Other
