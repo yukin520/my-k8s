@@ -27,17 +27,24 @@
     group: "root"
     mode: "0755"
 
+# /etc/apt/keyrings/にリポジトリの公開鍵を配置する際、
+# バイナリ形式の場合は*.gpgで、テキスト形式の場合(ASCII armor形式の場合)は*.ascで配置する。
+# Kubernetes公式ドキュメントでは「gpg --dearmor」コマンドでテキスト形式の公開鍵をバイナリに変換してから*.gpgで配置しているが、
+# 便宜上テキスト形式のまま*.ascで配置しすることとする。
+# [参考]
+# - https://zenn.dev/kariya_mitsuru/articles/a950e0996fb703
+# - https://qiita.com/alkshmir/items/9b1c0cdef06eb327c07d
 - name: Get the public key of Google cloud kubernetes repository to the node.
   get_url:
-    url: "https://dl.k8s.io/apt/doc/apt-key.gpg"
-    dest: /etc/apt/keyrings/kubernetes-archive-keyring.gpg
+    url: "https://pkgs.k8s.io/core:/stable:/v{ kubernetes_version }/deb/Release.key"
+    dest: /etc/apt/keyrings/kubernetes-apt-keyring.asc
     mode: '0644'
     force: true
   become: true
 
 - name: Add the kubernetes repository to the apt source.
   ansible.builtin.apt_repository:
-    repo: deb [ arch={{ deb_architecture[ansible_architecture] }} signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main
+    repo: "deb [ arch={{ deb_architecture[ansible_architecture] }} signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.asc] https://pkgs.k8s.io/core:/stable:/v{ kubernetes_version }/deb/ /"
     state: present
   become: true
 
