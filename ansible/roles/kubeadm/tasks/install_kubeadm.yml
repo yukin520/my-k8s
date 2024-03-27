@@ -44,7 +44,7 @@
 
 - name: Add the kubernetes repository to the apt source.
   ansible.builtin.apt_repository:
-    repo: "deb [ arch={{ deb_architecture[ansible_architecture] }} signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.asc] https://pkgs.k8s.io/core:/stable:/v{ kubernetes_version }/deb/ /"
+    repo: "deb [ arch={{ deb_architecture[ansible_architecture] }} signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.asc] https://pkgs.k8s.io/core:/stable:/v{{ kubernetes_version }}/deb/ /"
     state: present
   become: true
 
