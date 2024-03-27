@@ -36,7 +36,7 @@
 # - https://qiita.com/alkshmir/items/9b1c0cdef06eb327c07d
 - name: Get the public key of Google cloud kubernetes repository to the node.
   get_url:
-    url: "https://pkgs.k8s.io/core:/stable:/v{ kubernetes_version }/deb/Release.key"
+    url: "https://pkgs.k8s.io/core:/stable:/v{{ kubernetes_version  }}/deb/Release.key"
     dest: /etc/apt/keyrings/kubernetes-apt-keyring.asc
     mode: '0644'
     force: true
