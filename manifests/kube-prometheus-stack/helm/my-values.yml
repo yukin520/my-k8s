@@ -1,0 +1,20 @@
+prometheus:
+  prometheusSpec:
+    remoteWrite:
+    - url: "https://prometheus-prod-49-prod-ap-northeast-0.grafana.net/api/prom/push"
+      basicAuth:
+          username:
+            name: kubepromsecret
+            key: username
+          password:
+            name: kubepromsecret
+            key: password
+    replicaExternalLabelName: "__replica__"
+    externalLabels: {cluster: "homelab"}
+grafana:
+  adminPassword: admin
+  sidecar:
+    datasources:
+      enabled: true
+      defaultDatasourceEnabled: true
+      isDefaultDatasource: false
