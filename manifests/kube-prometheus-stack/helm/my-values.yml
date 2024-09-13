@@ -12,9 +12,18 @@ prometheus:
     replicaExternalLabelName: "__replica__"
     externalLabels: {cluster: "homelab"}
 grafana:
+  grafana.ini:
+    server:
+      root_url: "/grafana/"
   adminPassword: admin
   sidecar:
     datasources:
       enabled: true
       defaultDatasourceEnabled: true
       isDefaultDatasource: false
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
+    path: /grafana(/|$)(.*)
