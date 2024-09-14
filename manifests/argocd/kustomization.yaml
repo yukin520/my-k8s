@@ -8,4 +8,4 @@ resources:
 - https://raw.githubusercontent.com/argoproj/argo-cd/v2.7.2/manifests/install.yaml
 
 patchesStrategicMerge:
-- ./argocd-server-configmap.yml
+- ./argocd-cmd-params-configmap.yml
