@@ -7,5 +7,23 @@ resources:
 - argocd-ingress.yml
 - https://raw.githubusercontent.com/argoproj/argo-cd/v2.7.2/manifests/install.yaml
 
+patches:
+  # refer to https://github.com/argoproj/argo-helm/issues/1471
+  - target:
+      version: apps/v1
+      kind: Deployment
+      name: argocd-repo-server
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/securityContext/seccompProfile/type
+        value: Unconfined
+  - target:
+      version: apps/v1
+      kind: Deployment
+      name: argocd-repo-server
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/initContainers/0/securityContext/seccompProfile/type
+        value: Unconfined
 patchesStrategicMerge:
 - ./argocd-cmd-params-configmap.yml
