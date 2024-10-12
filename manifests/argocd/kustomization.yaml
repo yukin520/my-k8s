@@ -7,6 +7,8 @@ resources:
 - argocd-ingress.yml
 - https://raw.githubusercontent.com/argoproj/argo-cd/v2.7.2/manifests/install.yaml
 
-patchesStrategicMerge:
-- ./argocd-cmd-params-configmap.yml
-- ./delete-argocd-networkpolicy.yml
+patches:
+- path: ./argocd-cmd-params-configmap.yml
+- path: ./delete-application-controller-np.yml
+- path: ./delete-notifications-controller-np.yml
+- path: ./delete-repo-server-np.yml

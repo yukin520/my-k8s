@@ -1,0 +1,10 @@
+
+# notifications-controller Podが動作しているに関わらず
+# LivenessProveのチェックが意図通りに機能せずCrashLoopBackoffになってしまうため
+# 暫定的に該当のNetworkPolicyを削除することで対処する
+---
+$patch: delete
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: argocd-notifications-controller-network-policy
