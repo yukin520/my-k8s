@@ -7,4 +7,4 @@ $patch: delete
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: argocd argocd-application-controller-network-policy
+  name: argocd-application-controller-network-policy
