@@ -21,3 +21,4 @@ patches:
         value: Unconfined
 patchesStrategicMerge:
 - ./argocd-cmd-params-configmap.yml
+- ./delete-argocd-networkpolicy.yml
